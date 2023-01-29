@@ -24,7 +24,8 @@ def handle_photo(update, context):
     
     # Prepare the request for ChatGPT API
     headers = {'Content-Type': 'application/json'}
-    data = {'prompt': I, 'max_tokens': 100}
+    prompt = "Write a selling product description for the site: " + I
+    data = {'prompt': prompt, 'max_tokens': 100}
     url = 'ChatGPT_API_URL'
 
     # Send the request to ChatGPT API
