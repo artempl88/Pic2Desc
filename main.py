@@ -1,68 +1,58 @@
 import requests
-import json
 import tensorflow as tf
 import telegram
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-# Enter your Telegram Bot API Key
-API_KEY = "your_telegram_bot_api_key"
+# Enter your Telegram bot token
+bot_token = "YOUR_BOT_TOKEN"
 
-# Enter your TensorFlow API Key
-TF_API_KEY = "your_tensorflow_api_key"
+# Enter your TensorFlow API key
+tf_api_key = "YOUR_TF_API_KEY"
 
-# Enter your OpenAI API Key
-OPENAI_API_KEY = "your_openai_api_key"
+# Enter your ChatGPT API key
+gpt_api_key = "YOUR_GPT_API_KEY"
 
-def process_image(image_file):
-    # Process the image using TensorFlow API
-    # Replace this with your code to process the image using TensorFlow
-    # ...
-    return processed_data
+# Enter your Yandex Translate API key
+translate_api_key = "YOUR_TRANSLATE_API_KEY"
 
-def generate_description(data):
-    # Generate a description using the OpenAI API
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + OPENAI_API_KEY
-    }
-    model = "text-davinci-002"
-    prompt = "Write a selling product description for the site " + data
-    completions = openai.Completion.create(
-        engine=model,
-        prompt=prompt,
-        max_tokens=1024,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
-    message = completions.choices[0].text
-    return message
+# Create a Telegram bot
+bot = telegram.Bot(token=bot_token)
 
-def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Send me a photo of the product and I will generate a description for it.")
-
-def image_received(update, context):
-    # Get the image file from the update
-    image_file = update.message.photo[-1].get_file()
-    image_file.download("product.jpg")
-
-    # Process the image and generate a description
-    processed_data = process_image("product.jpg")
-    description = generate_description(processed_data)
-
-    # Send the description back to the user
-    context.bot.send_message(chat_id=update.effective_chat.id, text=description)
-
-# Initialize the Telegram Bot
-updater = Updater(token=API_KEY, use_context=True)
-dispatcher = updater.dispatcher
-
-# Add handlers for the bot
-start_handler = CommandHandler("start", start)
-dispatcher.add_handler(start_handler)
-
-image_handler = MessageHandler(Filters.photo, image_received)
-dispatcher.add_handler(image_handler)
+# Define the handler function for incoming messages
+def handle_message(message):
+    # Check if the message contains a photo
+    if message.photo:
+        # Get the largest photo file
+        photo = bot.get_file(message.photo[-1].file_id)
+        photo.download('image.jpg')
+        
+        # Use TensorFlow to process the image and extract information
+        information = tf.process_image('image.jpg', api_key=tf_api_key)
+        
+        # Send the information to the ChatGPT API to generate a product description
+        response = requests.post(
+            "https://api.openai.com/v1/engines/davinci/jobs",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {gpt_api_key}"
+            },
+            json={
+                "prompt": "Write a selling product description for the site: " + information,
+                "max_tokens": 1024
+            }
+        )
+        
+        # Extract the product description from the response
+        product_description = response.json()["choices"][0]["text"]
+        
+        # Translate the product description into Russian using the Yandex Translate API
+        response = requests.get(
+            f"https://translate.yandex.net/api/v1.5/tr.json/translate?key={translate_api_key}&text={product_description}&lang=ru"
+        )
+        translated_description = response.json()["text"][0]
+        
+        # Send the translated description back to the user
+        bot.send_message(chat_id=message.chat.id, text=translated_description)
 
 # Start the bot
-updater.start_polling()
+bot.set_update_listener(handle_message)
+bot.polling()
