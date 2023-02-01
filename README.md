@@ -1,4 +1,5 @@
 # Pic2Desc
+![Pic2Desc](https://github.com/artempl88/Pic2Desc/Pic2Desc_logo.png)
 Pic2Desc is a telegram bot that generates a product description based on a picture sent by the user and posts it to the website, based on Woocommerce plugin Woocommerce API.
 
 # Features
