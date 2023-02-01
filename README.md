@@ -33,4 +33,4 @@ Pic2Desc is a telegram bot that generates a product description based on a pictu
 5. Follow the instructions given by the bot to generate a product description.
 License
 
-## This project is licensed under the MIT License - see the LICENSE file for details.
+# This project is licensed under the MIT License - see the LICENSE file for details.
