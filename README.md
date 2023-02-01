@@ -1,5 +1,5 @@
 # Pic2Desc
-Pic2Desc is an application that generates a description of an image. The app takes in an image file and outputs a textual description of the image. The description focuses on the image content, such as objects.
+Pic2Desc is Telegram bot that generates a description of an image. The bot takes in an image file and outputs a textual description of the image. The description focuses on the image content, such as objects. After it posts the description with photo to the website through Woocommerce API.
 
 ## Requirements
 To run Pic2Desc, you will need the following software:
