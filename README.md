@@ -11,15 +11,12 @@ Numpy
 Installation
 To install the dependencies, run the following command in your terminal:
 
-## Copy code
 pip install tensorflow opencv-python numpy
-Usage
+
+## Usage
 To use Pic2Desc, simply run the following command in your terminal:
 
-css
-Copy code
-python pic2desc.py [path_to_image_file]
-Replace [path_to_image_file] with the path to your image file.
+'''python pic2desc.py''' or '''python3 pic2desc.py''', depending on your version of Python.
 
 ## Limitations
 Pic2Desc is an AI model and is subject to limitations in terms of accuracy and coverage. The model is trained on a limited data set and may not perform well on all types of images. In addition, the model may generate descriptions that are not entirely accurate or relevant to the image.
